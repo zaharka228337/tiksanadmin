@@ -29,10 +29,14 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 FilamentLanguageSwitchPlugin::make()
             ])
+            ->font('Montserrat')
             ->path('admin')
             ->login()
+            ->brandLogo(asset('images/tiksan-group.svg'))
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Blue,
+                'green' => Color::Green,
+                'indy' => Color::Indigo,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

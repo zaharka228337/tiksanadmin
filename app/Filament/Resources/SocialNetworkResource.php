@@ -3,9 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SocialNetworkResource\Pages;
-use App\Filament\Resources\SocialNetworkResource\RelationManagers;
 use App\Models\SocialNetwork;
-use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -14,8 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SocialNetworkResource extends Resource
 {
@@ -23,8 +19,7 @@ class SocialNetworkResource extends Resource
 
     protected static ?string $modelLabel = 'Социальные сети';
     protected static ?string $pluralModelLabel = 'Социальные сети';
-//    protected static ?string $navigationGroup = 'Структура';
-
+    protected static ?string $navigationGroup = 'Контакты';
     protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
 
     public static function form(Form $form): Form
@@ -70,12 +65,16 @@ class SocialNetworkResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateActions([
+                Tables\Actions\CreateAction::make(),
             ]);
     }
 
@@ -93,5 +92,15 @@ class SocialNetworkResource extends Resource
             'create' => Pages\CreateSocialNetwork::route('/create'),
             'edit' => Pages\EditSocialNetwork::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'green';
     }
 }

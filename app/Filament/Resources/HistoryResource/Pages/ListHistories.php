@@ -3,8 +3,11 @@
 namespace App\Filament\Resources\HistoryResource\Pages;
 
 use App\Filament\Resources\HistoryResource;
+use App\Models\History;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Resources\Pages\ListRecords\Tab;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListHistories extends ListRecords
 {
@@ -14,6 +17,18 @@ class ListHistories extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+        ];
+    }
+
+    public function getTabs():array{
+        return [
+            'Все' => Tab::make(),
+            'За месяц' => Tab::make()
+                ->badge(History::query()->where('created_at', '>=', now()->subMonth())->count())
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('created_at', '>=', now()->subMonth())),
+            'За неделю' => Tab::make()
+                ->badge(History::query()->where('created_at', '>=', now()->subWeek())->count())
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('created_at', '>=', now()->subWeek())),
         ];
     }
 }

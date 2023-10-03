@@ -10,6 +10,16 @@ class EditNews extends EditRecord
 {
     protected static string $resource = NewsResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Новость обновлена';
+    }
+
     protected function getHeaderActions(): array
     {
         return [

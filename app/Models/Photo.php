@@ -8,7 +8,7 @@ class Photo extends Model
 {
     protected $casts = [
         'active' => 'boolean',
-        'array' => 'gallery_images'
+        'gallery_images' => 'array'
     ];
 
     protected $fillable = [

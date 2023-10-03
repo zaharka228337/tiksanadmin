@@ -3,9 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MainSliderResource\Pages;
-use App\Filament\Resources\MainSliderResource\RelationManagers;
 use App\Models\MainSlider;
-use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
@@ -19,8 +17,6 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class MainSliderResource extends Resource
 {
@@ -28,7 +24,7 @@ class MainSliderResource extends Resource
 
     protected static ?string $modelLabel = 'Главный слайдер';
     protected static ?string $pluralModelLabel = 'Слайдеры';
-//    protected static ?string $navigationGroup = 'Главное';
+    protected static ?string $navigationGroup = 'Пресс-центр';
     protected static ?string $navigationIcon = 'heroicon-o-code-bracket-square';
 
     public static function form(Form $form): Form
@@ -138,12 +134,16 @@ class MainSliderResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateActions([
+                Tables\Actions\CreateAction::make(),
             ]);
     }
 
@@ -161,5 +161,15 @@ class MainSliderResource extends Resource
             'create' => Pages\CreateMainSlider::route('/create'),
             'edit' => Pages\EditMainSlider::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'green';
     }
 }
