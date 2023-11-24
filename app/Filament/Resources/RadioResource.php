@@ -30,45 +30,27 @@ class RadioResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Настройки')
-                    ->schema([
-                        FieldSet::make()
-                            ->schema([
-                                Checkbox::make('active')
-                                    ->label('Активность'),
-                            ]),
-                        FieldSet::make()
-                            ->schema([
-                                TextInput::make('sorting')
-                                    ->rules('integer')
-                                    ->default(500)
-                                    ->required()
-                                    ->label('Сортировка'),
-                            ])
-                    ]),
-                Section::make('Основное')
-                    ->schema([
-                        FieldSet::make()
-                            ->schema([
-                                TextInput::make('title')
-                                    ->label('Заголовок')
-                                    ->required()
-                                    ->maxLength(80),
-                                DatePicker::make('date_publish')
-                                    ->afterOrEqual('today')
-                                    ->label('Дата публикации')
-                                    ->required(),
-                            ])
-                    ]),
-                Section::make('Медиа')
-                    ->schema([
-                        FieldSet::make()
-                            ->schema([
-                                TextInput::make('audio')
-                                    ->label('Аудио')
-                                    ->required(),
-                            ])
-                    ]),
+                Select::make('category')
+                    ->label('Категория товара')
+                    ->options($categories)
+                    ->native(false)
+                    ->live()
+                    ->afterStateUpdated(fn (Select $component) => $component
+                        ->getContainer()
+                        ->getComponent('dynamicTypeFields')
+                        ->getChildComponentContainer()
+                        ->fill()),
+                Grid::make(1)
+                    ->schema(fn (Get $get): array => match ($get('category')) {
+                        $categories[$get('category')] => [
+                            TextInput::make('hourly_rate')
+                                ->numeric()
+                                ->required()
+                                ->prefix('€'),
+                        ],
+                        default => [],
+                    })
+                    ->key('dynamicTypeFields')
             ]);
     }
 
